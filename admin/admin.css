@@ -1,0 +1,175 @@
+/* =============================================================================
+   Swiper CPT Carousel – Admin Styles
+   ============================================================================= */
+
+.scc-metabox {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.scc-section {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 20px 0 24px;
+}
+
+.scc-section:last-child {
+    border-bottom: none;
+}
+
+.scc-section-title {
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Table ----------------------------------------------------------------- */
+.scc-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.scc-table th {
+    width: 220px;
+    text-align: left;
+    vertical-align: top;
+    padding: 8px 12px 8px 0;
+    font-weight: 600;
+    color: #374151;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.scc-table td {
+    padding: 6px 0;
+    vertical-align: top;
+}
+
+/* Radio slides count ---------------------------------------------------- */
+.scc-radio-group {
+    display: flex;
+    gap: 8px;
+}
+
+.scc-radio-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+}
+
+.scc-radio-label:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.scc-radio-label.is-active,
+.scc-radio-label input:checked ~ * {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.scc-radio-label input[type="radio"] {
+    display: none;
+}
+
+/* Select ---------------------------------------------------------------- */
+.scc-select {
+    min-width: 280px;
+}
+
+/* Checklist ------------------------------------------------------------- */
+.scc-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: #fafafa;
+    min-width: 280px;
+}
+
+.scc-checklist label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.scc-check-all {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+}
+
+/* ACF rows -------------------------------------------------------------- */
+.scc-acf-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.scc-acf-key {
+    flex: 1;
+    font-family: monospace;
+}
+
+.scc-acf-label {
+    flex: 1;
+}
+
+.scc-remove-acf-row {
+    flex-shrink: 0;
+    color: #dc2626;
+    border-color: #dc2626 !important;
+}
+
+.scc-acf-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* Badge ----------------------------------------------------------------- */
+.scc-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scc-badge--warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Shortcode box --------------------------------------------------------- */
+.scc-shortcode-box input {
+    font-family: monospace;
+    background: #f3f4f6;
+}
