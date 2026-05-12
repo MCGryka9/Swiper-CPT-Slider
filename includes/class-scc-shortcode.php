@@ -84,25 +84,52 @@ class SCC_Shortcode {
             'posts_per_page' => (int) ( get_post_meta( $id, '_scc_posts_per_page', true ) ?: 9 ),
             'acf_fields'     => (array) ( get_post_meta( $id, '_scc_acf_fields', true ) ?: [] ),
             'autoplay'       => (bool) get_post_meta( $id, '_scc_autoplay', true ),
+            'orderby'         => get_post_meta( $id, '_scc_orderby', true ) ?: 'date',
+            'order'           => get_post_meta( $id, '_scc_order', true ) ?: 'DESC',
+            'views_meta_key'  => get_post_meta( $id, '_scc_views_meta_key', true ) ?: 'post_views_count',
+            'rating_meta_key' => get_post_meta( $id, '_scc_rating_meta_key', true ) ?: 'ratings_average',
         ];
     }
 
     private static function get_posts( array $config ): array {
+        $orderby = $config['orderby'];
+
         $args = [
             'post_type'      => $config['cpt'],
             'post_status'    => 'publish',
             'posts_per_page' => $config['posts_per_page'],
             'no_found_rows'  => true,
+            'order'          => $config['order'],
         ];
 
+        // Mapowanie specjalnych wartości orderby
+        switch ( $orderby ) {
+            case 'views':
+                $args['orderby']  = 'meta_value_num';
+                $args['meta_key'] = $config['views_meta_key'];
+                break;
+
+            case 'rating':
+                $args['orderby']  = 'meta_value_num';
+                $args['meta_key'] = $config['rating_meta_key'];
+                break;
+
+            case 'rand':
+                $args['orderby'] = 'rand';
+                unset( $args['order'] ); // rand ignoruje order
+                break;
+
+            default:
+                // date, title, modified, comment_count, menu_order — natywne WP_Query
+                $args['orderby'] = $orderby;
+        }
+
         if ( $config['taxonomy'] && ! empty( $config['terms'] ) ) {
-            $args['tax_query'] = [
-                [
-                    'taxonomy' => $config['taxonomy'],
-                    'field'    => 'term_id',
-                    'terms'    => $config['terms'],
-                ],
-            ];
+            $args['tax_query'] = [ [
+                'taxonomy' => $config['taxonomy'],
+                'field'    => 'term_id',
+                'terms'    => $config['terms'],
+            ] ];
         }
 
         $query = new WP_Query( $args );

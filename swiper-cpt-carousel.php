@@ -34,3 +34,12 @@ add_action( 'plugins_loaded', function () {
     SCC_Ajax::init();
     SCC_Admin::init();
 } );
+
+// Licznik wyświetleń wpisów (do sortowania karuzeli po popularności)
+add_action( 'wp_head', function () {
+    if ( is_singular() ) {
+        $id    = get_the_ID();
+        $count = (int) get_post_meta( $id, 'post_views_count', true );
+        update_post_meta( $id, 'post_views_count', $count + 1 );
+    }
+} );

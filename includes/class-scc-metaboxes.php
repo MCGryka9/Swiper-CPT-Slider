@@ -79,6 +79,11 @@ class SCC_Metaboxes {
         $posts_per_page = get_post_meta( $post->ID, '_scc_posts_per_page', true ) ?: '9';
         $autoplay      = get_post_meta( $post->ID, '_scc_autoplay', true ) ?: '0';
 
+        $orderby         = get_post_meta( $post->ID, '_scc_orderby', true ) ?: 'date';
+        $order           = get_post_meta( $post->ID, '_scc_order', true ) ?: 'DESC';
+        $views_meta_key  = get_post_meta( $post->ID, '_scc_views_meta_key', true ) ?: 'post_views_count';
+        $rating_meta_key = get_post_meta( $post->ID, '_scc_rating_meta_key', true ) ?: 'ratings_average';
+
         $all_cpts = self::get_public_cpts();
 
         include SCC_PLUGIN_DIR . 'templates/metabox-settings.php';
@@ -94,24 +99,28 @@ class SCC_Metaboxes {
             return;
         }
 
-        $fields = [
-            '_scc_slides_count'   => 'intval',
-            '_scc_cpt'            => 'sanitize_text_field',
-            '_scc_taxonomy'       => 'sanitize_text_field',
-            '_scc_posts_per_page' => 'intval',
-            '_scc_autoplay'       => 'intval',
-        ];
+    $fields = [
+        '_scc_slides_count'    => 'intval',
+        '_scc_cpt'             => 'sanitize_text_field',
+        '_scc_taxonomy'        => 'sanitize_text_field',
+        '_scc_posts_per_page'  => 'intval',
+        '_scc_autoplay'        => 'intval',
+        '_scc_orderby'         => 'sanitize_key',
+        '_scc_order'           => 'sanitize_text_field',
+        '_scc_views_meta_key'  => 'sanitize_key',
+        '_scc_rating_meta_key' => 'sanitize_key',
+    ];
 
-        foreach ( $fields as $key => $sanitize ) {
-            $raw = isset( $_POST[ ltrim( $key, '_' ) ] )
-                ? wp_unslash( $_POST[ ltrim( $key, '_' ) ] )
-                : ( isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '' );
+foreach ( $fields as $key => $sanitize ) {
 
-            // Try both with and without leading underscore prefix
-            $post_key = ltrim( $key, '_' );
-            $value    = isset( $_POST[ $post_key ] ) ? $sanitize( wp_unslash( $_POST[ $post_key ] ) ) : '';
-            update_post_meta( $post_id, $key, $value );
-        }
+    $post_key = ltrim( $key, '_' );
+
+    $value = isset( $_POST[ $post_key ] )
+        ? $sanitize( wp_unslash( $_POST[ $post_key ] ) )
+        : '';
+
+    update_post_meta( $post_id, $key, $value );
+}
 
         // Terms (array of ints)
         $terms = isset( $_POST['scc_terms'] ) ? array_map( 'intval', (array) $_POST['scc_terms'] ) : [];

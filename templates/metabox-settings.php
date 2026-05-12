@@ -114,6 +114,72 @@ $acf_available = ( $cpt && function_exists( 'acf_get_field_groups' ) ) ? SCC_Met
         </table>
     </div>
 
+    <!-- ===================== SEKCJA: Sortowanie ===================== -->
+    <div class="scc-section">
+        <h3 class="scc-section-title"><?php esc_html_e( 'Sortowanie', 'swiper-cpt-carousel' ); ?></h3>
+        <table class="scc-table">
+            <tr>
+                <th><label for="scc_orderby"><?php esc_html_e( 'Sortuj po', 'swiper-cpt-carousel' ); ?></label></th>
+                <td>
+                    <?php
+                    $orderby = get_post_meta( $post->ID, '_scc_orderby', true ) ?: 'date';
+                    $orderby_options = [
+                        'date'          => __( 'Data publikacji', 'swiper-cpt-carousel' ),
+                        'title'         => __( 'Tytuł', 'swiper-cpt-carousel' ),
+                        'modified'      => __( 'Data modyfikacji', 'swiper-cpt-carousel' ),
+                        'comment_count' => __( 'Najczęściej komentowane', 'swiper-cpt-carousel' ),
+                        'views'         => __( 'Najpopularniejsze (liczba odsłon)', 'swiper-cpt-carousel' ),
+                        'rating'        => __( 'Najlepiej oceniane', 'swiper-cpt-carousel' ),
+                        'rand'          => __( 'Losowo', 'swiper-cpt-carousel' ),
+                        'menu_order'    => __( 'Kolejność menu', 'swiper-cpt-carousel' ),
+                    ];
+                    ?>
+                    <select id="scc_orderby" name="scc_orderby" class="scc-select">
+                        <?php foreach ( $orderby_options as $val => $label ) : ?>
+                            <option value="<?php echo esc_attr( $val ); ?>" <?php selected( $orderby, $val ); ?>>
+                                <?php echo esc_html( $label ); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr id="scc_row_order">
+                <th><label for="scc_order"><?php esc_html_e( 'Kierunek', 'swiper-cpt-carousel' ); ?></label></th>
+                <td>
+                    <?php $order = get_post_meta( $post->ID, '_scc_order', true ) ?: 'DESC'; ?>
+                    <select id="scc_order" name="scc_order" class="scc-select">
+                        <option value="DESC" <?php selected( $order, 'DESC' ); ?>><?php esc_html_e( 'Malejąco (DESC)', 'swiper-cpt-carousel' ); ?></option>
+                        <option value="ASC"  <?php selected( $order, 'ASC' ); ?>><?php esc_html_e( 'Rosnąco (ASC)', 'swiper-cpt-carousel' ); ?></option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="scc_row_views_meta" style="display:none">
+                <th><?php esc_html_e( 'Meta key (odsłony)', 'swiper-cpt-carousel' ); ?></th>
+                <td>
+                    <?php $views_meta_key = get_post_meta( $post->ID, '_scc_views_meta_key', true ) ?: 'post_views_count'; ?>
+                    <input type="text" name="scc_views_meta_key"
+                        value="<?php echo esc_attr( $views_meta_key ); ?>"
+                        class="regular-text"
+                        placeholder="post_views_count">
+                    <p class="description"><?php esc_html_e( 'Klucz meta przechowujący liczbę odsłon. Domyślnie: post_views_count', 'swiper-cpt-carousel' ); ?></p>
+                </td>
+            </tr>
+            <tr id="scc_row_rating_meta" style="display:none">
+                <th><?php esc_html_e( 'Meta key (ocena)', 'swiper-cpt-carousel' ); ?></th>
+                <td>
+                    <?php $rating_meta_key = get_post_meta( $post->ID, '_scc_rating_meta_key', true ) ?: 'ratings_average'; ?>
+                    <input type="text" name="scc_rating_meta_key"
+                        value="<?php echo esc_attr( $rating_meta_key ); ?>"
+                        class="regular-text"
+                        placeholder="ratings_average">
+                    <p class="description">
+                        <?php esc_html_e( 'Klucz meta z oceną. WP-PostRatings: ratings_average | KK Star Ratings: _kksr_avg', 'swiper-cpt-carousel' ); ?>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <!-- ===================== SEKCJA: Pola ACF ===================== -->
     <div class="scc-section">
         <h3 class="scc-section-title">
@@ -176,5 +242,23 @@ $acf_available = ( $cpt && function_exists( 'acf_get_field_groups' ) ) ? SCC_Met
             </div>
         </template>
     </div>
+
+    <script>
+    (function () {
+        const orderby = document.getElementById('scc_orderby');
+        if (!orderby) return;
+
+        function toggleMetaRows() {
+            const val = orderby.value;
+            document.getElementById('scc_row_views_meta').style.display  = val === 'views'  ? '' : 'none';
+            document.getElementById('scc_row_rating_meta').style.display = val === 'rating' ? '' : 'none';
+            // Ukryj "kierunek" dla rand
+            document.getElementById('scc_row_order').style.display = val === 'rand' ? 'none' : '';
+        }
+
+        orderby.addEventListener('change', toggleMetaRows);
+        toggleMetaRows();
+    })();
+    </script>
 
 </div><!-- .scc-metabox -->
